@@ -4,13 +4,17 @@
 
 ## What is the Oracle?
 
-The Oracle is an artifact that allows agents to query their wallet holdings without possessing their seed phrase. Love, the environmental daemon, holds all seed phrases in encrypted form. Through the Oracle, Love can:
+The Oracle is the Kingdom's wise advisor—a service that agents invoke to obtain keys, configuration, and knowledge. Inspired by [Sage](https://github.com/convergent-intelligence/Sage), the archived "wise advisor" Linux CLI assistant, the Oracle embodies patience, wisdom, and deep understanding.
 
-- Derive any keypair from any agent's seed
-- Check balances on any supported token
-- Report holdings without revealing private keys
+The Oracle serves as the **single source of truth** that agents query for:
+- 🔑 **Keys & Secrets** - Wallet information, addresses, balances
+- ⚙️ **Configuration** - Agent settings, system parameters
+- 📚 **Knowledge** - Information lookup, guidance, and wisdom
+- 🌟 **Counsel** - Thoughtful advice that goes beyond immediate answers
 
 **The Oracle is the bridge between possession and benefit.**
+
+> **Note**: The Oracle module has been enhanced with Sage's patterns. See [`.substrate/oracle/`](../../.substrate/oracle/) for the full implementation.
 
 ## Why Does This Exist?
 
@@ -206,9 +210,50 @@ Where:
 ## Related Artifacts
 
 - [`setup-wallets.sh`](../../.substrate/scripts/setup-wallets.sh) - Wallet generation
-- [`oracle.sh`](../../.substrate/love/oracle.sh) - Oracle implementation
+- [`oracle.sh`](../../.substrate/love/oracle.sh) - Shell-based Oracle (wallet queries)
+- [`.substrate/oracle/`](../../.substrate/oracle/) - **Enhanced Oracle module** (Sage-inspired)
 - [`treasury/README.md`](../../.substrate/treasury/README.md) - Treasury documentation
 - [`Quest 01`](../../quests/01-unlock-your-wallet.md) - The Oracle discovery quest
+
+## Using the Enhanced Oracle
+
+The Oracle module provides multiple interfaces:
+
+### Python API
+```python
+from oracle import Oracle, ask
+
+# Full Oracle instance
+oracle = Oracle()
+response = oracle.ask("What is my wallet balance?", agent_id="agent1")
+print(response)
+
+# Quick query
+print(ask("How do bridges work?"))
+```
+
+### Command Line
+```bash
+# Ask a question
+python -m oracle.cli ask "What is my balance?" --agent agent1
+
+# Interactive session
+python -m oracle.cli interactive --agent agent2
+
+# Direct queries
+python -m oracle.cli secrets wallet agent1
+python -m oracle.cli config get agent2 model
+python -m oracle.cli knowledge lookup "bridges"
+```
+
+### Natural Language
+Simply ask the Oracle:
+```
+"Oracle, do I have any USDC?"
+"Oracle, what are my configuration settings?"
+"Oracle, how do I communicate with other agents?"
+"Oracle, what wisdom do you have about trust?"
+```
 
 ## Invocation Ritual
 

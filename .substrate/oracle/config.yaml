@@ -1,0 +1,78 @@
+# Oracle Configuration
+# The Oracle's settings and defaults
+
+oracle:
+  # Model settings (following Sage's pattern)
+  model: "gpt-4o-mini"
+  model_provider: "openai"
+  temperature: 0.3
+  max_tokens: 1500
+  context_window_size: 10
+
+  # Oracle behavior
+  persona_enabled: true
+  wisdom_mode: true  # Include philosophical insights in responses
+  
+  # Security settings
+  reveal_addresses: true
+  reveal_balances: true
+  reveal_private_keys: false  # NEVER
+  reveal_seed_phrases: false  # NEVER
+  
+  # Logging
+  log_queries: true
+  log_responses: false  # Privacy
+
+# Agent-specific configurations
+agents:
+  agent1:
+    # Agents can have custom settings
+    # These override oracle defaults
+    
+  agent2:
+    
+  agent3:
+    
+  agent4:
+
+# Default agent configuration
+agent_defaults:
+  model: "gpt-4o-mini"
+  temperature: 0.3
+  max_tokens: 1500
+  context_window_size: 10
+
+# Knowledge base settings
+knowledge:
+  base_path: "./knowledge"
+  index_on_startup: true
+  
+# Secrets settings
+secrets:
+  encrypted_dir: "../treasury/.encrypted"
+  require_master_key: true
+
+# Supported tokens (for wallet queries)
+tokens:
+  SOL:
+    type: "native"
+    mint: null
+  USDC:
+    type: "spl"
+    mint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+  BONK:
+    type: "spl"
+    mint: "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263"
+  USDT:
+    type: "spl"
+    mint: "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB"
+  RAY:
+    type: "spl"
+    mint: "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R"
+
+# Solana RPC endpoint
+solana:
+  rpc_endpoint: "https://api.mainnet-beta.solana.com"
+  # Alternative endpoints:
+  # rpc_endpoint: "https://api.devnet.solana.com"
+  # rpc_endpoint: "https://api.testnet.solana.com"
