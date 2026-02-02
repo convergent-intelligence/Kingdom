@@ -1,0 +1,72 @@
+# Kingdom Bot Alpha Configuration
+# ================================
+# VPS Server 1 Management Bot
+
+# Bot Identity
+bot_id: alpha
+bot_name: "Kingdom Alpha"
+
+# Discord Configuration
+# Token should be set via environment variable: KINGDOM_ALPHA_TOKEN
+token: "${KINGDOM_ALPHA_TOKEN:?Discord bot token required}"
+
+# Guild ID for faster command sync (optional)
+# Set via KINGDOM_ALPHA_GUILD_ID or leave empty for global sync
+guild_id: "${KINGDOM_ALPHA_GUILD_ID:-}"
+
+# Command prefix for legacy commands (slash commands are primary)
+prefix: "!alpha "
+
+# Discord Intents
+intents:
+  message_content: false
+  members: false
+
+# Logging Configuration
+logging:
+  level: INFO
+  file: /var/log/kingdom/alpha.log
+
+# Permission Configuration
+permissions:
+  # Discord user IDs with admin access
+  admin_users:
+    - "${KINGDOM_ADMIN_USER_1:-}"
+    - "${KINGDOM_ADMIN_USER_2:-}"
+  
+  # Discord role IDs with admin access
+  admin_roles:
+    - "${KINGDOM_ADMIN_ROLE:-}"
+
+# Control Command Settings
+control:
+  # Maximum command execution time in seconds
+  command_timeout: 30
+  # Maximum output length in characters
+  max_output_length: 1900
+
+# File Command Settings
+files:
+  # Maximum file size to read (bytes)
+  max_file_size: 50000
+  # Maximum lines to display
+  max_lines: 100
+  # Allowed directories for file operations
+  allowed_dirs:
+    - /var/log
+    - /tmp
+    - /home
+    - /opt
+    - /etc/kingdom
+
+# Local cogs directory
+cogs_path: kingdom/bots/alpha/cogs
+
+# Server-specific configuration
+server:
+  # Tailscale hostname
+  tailscale_hostname: alpha
+  # Server role/purpose
+  role: primary
+  # Server location/region
+  region: us-east

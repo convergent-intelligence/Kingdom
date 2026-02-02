@@ -1,0 +1,53 @@
+[Unit]
+Description=Kingdom Discord Bot ({{ bot_id }})
+Documentation=https://github.com/your-org/kingdom-bots
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User={{ kingdom_user }}
+Group={{ kingdom_user }}
+WorkingDirectory={{ kingdom_home }}/kingdom-bots
+
+# Environment
+EnvironmentFile=/etc/kingdom/{{ bot_id }}.env
+
+# Python virtual environment
+Environment="PATH={{ kingdom_home }}/kingdom-bots/venv/bin:/usr/local/bin:/usr/bin:/bin"
+Environment="PYTHONUNBUFFERED=1"
+Environment="PYTHONDONTWRITEBYTECODE=1"
+
+# Execute the bot
+ExecStart={{ kingdom_home }}/kingdom-bots/venv/bin/python -m kingdom.bots.{{ bot_id }}.main
+
+# Restart policy
+Restart=always
+RestartSec=10
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=read-only
+PrivateTmp=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+
+# Allow write access to specific directories
+ReadWritePaths=/var/log/kingdom
+ReadWritePaths=/tmp
+
+# Resource limits
+MemoryMax=512M
+CPUQuota=50%
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=kingdom-{{ bot_id }}
+
+[Install]
+WantedBy=multi-user.target

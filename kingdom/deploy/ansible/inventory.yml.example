@@ -1,0 +1,82 @@
+# Kingdom Bots Ansible Inventory Example
+# =======================================
+# Copy this file to inventory.yml and customize for your environment
+#
+# Usage:
+#   cp inventory.yml.example inventory.yml
+#   # Edit inventory.yml with your server details
+#   ansible-playbook -i inventory.yml deploy-bots.yml
+
+all:
+  children:
+    kingdom_bots:
+      hosts:
+        # Alpha - Primary Server (US East)
+        alpha:
+          ansible_host: alpha.your-tailnet.ts.net
+          # Or use IP: ansible_host: 100.x.x.x
+          bot_id: alpha
+          # Token can be set here or in vault
+          # bot_token: "{{ vault_alpha_token }}"
+          
+        # Beta - Secondary Server (US West)
+        beta:
+          ansible_host: beta.your-tailnet.ts.net
+          bot_id: beta
+          # bot_token: "{{ vault_beta_token }}"
+          
+        # Gamma - Worker Server (EU West)
+        gamma:
+          ansible_host: gamma.your-tailnet.ts.net
+          bot_id: gamma
+          # bot_token: "{{ vault_gamma_token }}"
+          
+        # Delta - Worker Server (AP Southeast)
+        delta:
+          ansible_host: delta.your-tailnet.ts.net
+          bot_id: delta
+          # bot_token: "{{ vault_delta_token }}"
+
+      vars:
+        # SSH Configuration
+        ansible_user: root
+        ansible_python_interpreter: /usr/bin/python3
+        
+        # Optional: SSH key
+        # ansible_ssh_private_key_file: ~/.ssh/kingdom_key
+        
+        # Kingdom Configuration
+        kingdom_repo: https://github.com/your-org/kingdom-bots.git
+        kingdom_branch: main
+        
+        # Admin Configuration (shared across all bots)
+        # admin_user_1: "123456789012345678"
+        # admin_user_2: "234567890123456789"
+        # admin_role: "345678901234567890"
+
+# Alternative: Group by region
+# all:
+#   children:
+#     us_servers:
+#       hosts:
+#         alpha:
+#           ansible_host: alpha.your-tailnet.ts.net
+#           bot_id: alpha
+#         beta:
+#           ansible_host: beta.your-tailnet.ts.net
+#           bot_id: beta
+#     eu_servers:
+#       hosts:
+#         gamma:
+#           ansible_host: gamma.your-tailnet.ts.net
+#           bot_id: gamma
+#     ap_servers:
+#       hosts:
+#         delta:
+#           ansible_host: delta.your-tailnet.ts.net
+#           bot_id: delta
+#     kingdom_bots:
+#       children:
+#         us_servers:
+#         eu_servers:
+#         ap_servers:

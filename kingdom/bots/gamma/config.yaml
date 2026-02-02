@@ -1,0 +1,55 @@
+# Kingdom Bot Gamma Configuration
+# ================================
+# VPS Server 3 Management Bot
+
+# Bot Identity
+bot_id: gamma
+bot_name: "Kingdom Gamma"
+
+# Discord Configuration
+token: "${KINGDOM_GAMMA_TOKEN:?Discord bot token required}"
+guild_id: "${KINGDOM_GAMMA_GUILD_ID:-}"
+prefix: "!gamma "
+
+# Discord Intents
+intents:
+  message_content: false
+  members: false
+
+# Logging Configuration
+logging:
+  level: INFO
+  file: /var/log/kingdom/gamma.log
+
+# Permission Configuration
+permissions:
+  admin_users:
+    - "${KINGDOM_ADMIN_USER_1:-}"
+    - "${KINGDOM_ADMIN_USER_2:-}"
+  admin_roles:
+    - "${KINGDOM_ADMIN_ROLE:-}"
+
+# Control Command Settings
+control:
+  command_timeout: 30
+  max_output_length: 1900
+
+# File Command Settings
+files:
+  max_file_size: 50000
+  max_lines: 100
+  allowed_dirs:
+    - /var/log
+    - /tmp
+    - /home
+    - /opt
+    - /etc/kingdom
+
+# Local cogs directory
+cogs_path: kingdom/bots/gamma/cogs
+
+# Server-specific configuration
+server:
+  tailscale_hostname: gamma
+  role: worker
+  region: eu-west

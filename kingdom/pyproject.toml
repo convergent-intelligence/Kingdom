@@ -1,0 +1,136 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kingdom-bots"
+version = "1.0.0"
+description = "Autonomous Discord bots for managing Tailscale VPS servers"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.11"
+authors = [
+    {name = "Kingdom Team"}
+]
+keywords = ["discord", "bot", "tailscale", "vps", "server-management"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Framework :: AsyncIO",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: System :: Monitoring",
+    "Topic :: System :: Systems Administration",
+    "Topic :: Communications :: Chat",
+    "Typing :: Typed",
+]
+
+dependencies = [
+    "discord.py>=2.3.0",
+    "PyYAML>=6.0",
+    "psutil>=5.9.0",
+    "aiohttp>=3.9.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21",
+    "pytest-cov>=4.0",
+    "black>=23.0",
+    "isort>=5.12",
+    "mypy>=1.0",
+    "ruff>=0.1",
+]
+
+[project.urls]
+Homepage = "https://github.com/your-org/kingdom-bots"
+Documentation = "https://github.com/your-org/kingdom-bots#readme"
+Repository = "https://github.com/your-org/kingdom-bots.git"
+Issues = "https://github.com/your-org/kingdom-bots/issues"
+
+[project.scripts]
+kingdom-alpha = "kingdom.bots.alpha.main:main"
+kingdom-beta = "kingdom.bots.beta.main:main"
+kingdom-gamma = "kingdom.bots.gamma.main:main"
+kingdom-delta = "kingdom.bots.delta.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["kingdom*"]
+
+[tool.setuptools.package-data]
+kingdom = ["**/*.yaml", "**/*.yml", "**/*.j2", "**/*.service", "**/*.sh"]
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+    | \.venv
+    | venv
+    | build
+    | dist
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 88
+skip = [".git", ".venv", "venv", "build", "dist"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+ignore_missing_imports = true
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+]
+ignore = [
+    "E501",  # line too long (handled by black)
+    "B008",  # do not perform function calls in argument defaults
+]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+
+[tool.coverage.run]
+source = ["kingdom"]
+branch = true
+omit = ["*/tests/*", "*/__pycache__/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+    "if __name__ == .__main__.:",
+]

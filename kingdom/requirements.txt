@@ -1,0 +1,17 @@
+# Kingdom Discord Bot Dependencies
+# =================================
+
+# Discord
+discord.py>=2.3.0
+
+# Configuration
+PyYAML>=6.0
+
+# System Monitoring
+psutil>=5.9.0
+
+# Async utilities
+aiohttp>=3.9.0
+
+# Type checking (optional, for development)
+# typing-extensions>=4.0.0

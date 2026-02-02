@@ -1,0 +1,55 @@
+# Kingdom Bot Beta Configuration
+# ===============================
+# VPS Server 2 Management Bot
+
+# Bot Identity
+bot_id: beta
+bot_name: "Kingdom Beta"
+
+# Discord Configuration
+token: "${KINGDOM_BETA_TOKEN:?Discord bot token required}"
+guild_id: "${KINGDOM_BETA_GUILD_ID:-}"
+prefix: "!beta "
+
+# Discord Intents
+intents:
+  message_content: false
+  members: false
+
+# Logging Configuration
+logging:
+  level: INFO
+  file: /var/log/kingdom/beta.log
+
+# Permission Configuration
+permissions:
+  admin_users:
+    - "${KINGDOM_ADMIN_USER_1:-}"
+    - "${KINGDOM_ADMIN_USER_2:-}"
+  admin_roles:
+    - "${KINGDOM_ADMIN_ROLE:-}"
+
+# Control Command Settings
+control:
+  command_timeout: 30
+  max_output_length: 1900
+
+# File Command Settings
+files:
+  max_file_size: 50000
+  max_lines: 100
+  allowed_dirs:
+    - /var/log
+    - /tmp
+    - /home
+    - /opt
+    - /etc/kingdom
+
+# Local cogs directory
+cogs_path: kingdom/bots/beta/cogs
+
+# Server-specific configuration
+server:
+  tailscale_hostname: beta
+  role: secondary
+  region: us-west

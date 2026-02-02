@@ -1,0 +1,226 @@
+---
+# Kingdom Bots Ansible Deployment Playbook
+# =========================================
+# Deploys Kingdom Discord bots to multiple VPS servers
+#
+# Usage:
+#   ansible-playbook -i inventory.yml deploy-bots.yml
+#   ansible-playbook -i inventory.yml deploy-bots.yml --limit alpha
+#   ansible-playbook -i inventory.yml deploy-bots.yml --tags update
+
+- name: Deploy Kingdom Discord Bots
+  hosts: kingdom_bots
+  become: yes
+  vars:
+    kingdom_user: kingdom
+    kingdom_home: /opt/kingdom
+    kingdom_repo: https://github.com/your-org/kingdom-bots.git
+    kingdom_branch: main
+    python_version: "3.11"
+    
+  tasks:
+    # System Setup
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+      tags: [setup, update]
+
+    - name: Install system dependencies
+      apt:
+        name:
+          - "python{{ python_version }}"
+          - "python{{ python_version }}-venv"
+          - "python{{ python_version }}-dev"
+          - python3-pip
+          - git
+          - curl
+          - htop
+          - vim
+        state: present
+      tags: [setup]
+
+    # Tailscale Installation
+    - name: Check if Tailscale is installed
+      command: which tailscale
+      register: tailscale_check
+      ignore_errors: yes
+      changed_when: false
+      tags: [setup, tailscale]
+
+    - name: Install Tailscale
+      shell: curl -fsSL https://tailscale.com/install.sh | sh
+      when: tailscale_check.rc != 0
+      tags: [setup, tailscale]
+
+    # User Setup
+    - name: Create kingdom user
+      user:
+        name: "{{ kingdom_user }}"
+        home: "{{ kingdom_home }}"
+        shell: /bin/bash
+        system: yes
+        create_home: yes
+      tags: [setup]
+
+    - name: Configure sudo permissions
+      copy:
+        dest: /etc/sudoers.d/kingdom
+        content: |
+          # Kingdom bot sudo permissions
+          kingdom ALL=(ALL) NOPASSWD: /bin/systemctl status *
+          kingdom ALL=(ALL) NOPASSWD: /bin/systemctl start *
+          kingdom ALL=(ALL) NOPASSWD: /bin/systemctl stop *
+          kingdom ALL=(ALL) NOPASSWD: /bin/systemctl restart *
+          kingdom ALL=(ALL) NOPASSWD: /bin/systemctl enable *
+          kingdom ALL=(ALL) NOPASSWD: /bin/systemctl disable *
+          kingdom ALL=(ALL) NOPASSWD: /sbin/shutdown
+          kingdom ALL=(ALL) NOPASSWD: /sbin/reboot
+          kingdom ALL=(ALL) NOPASSWD: /bin/journalctl
+        mode: '0440'
+        validate: 'visudo -cf %s'
+      tags: [setup]
+
+    # Directory Setup
+    - name: Create kingdom directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ kingdom_user }}"
+        group: "{{ kingdom_user }}"
+        mode: '0755'
+      loop:
+        - "{{ kingdom_home }}"
+        - /var/log/kingdom
+        - /etc/kingdom
+      tags: [setup]
+
+    # Repository Management
+    - name: Clone/update kingdom repository
+      git:
+        repo: "{{ kingdom_repo }}"
+        dest: "{{ kingdom_home }}/kingdom-bots"
+        version: "{{ kingdom_branch }}"
+        force: yes
+      become_user: "{{ kingdom_user }}"
+      tags: [setup, update, deploy]
+
+    # Python Environment
+    - name: Create Python virtual environment
+      command: "python{{ python_version }} -m venv {{ kingdom_home }}/kingdom-bots/venv"
+      args:
+        creates: "{{ kingdom_home }}/kingdom-bots/venv/bin/python"
+      become_user: "{{ kingdom_user }}"
+      tags: [setup]
+
+    - name: Upgrade pip
+      pip:
+        name: pip
+        state: latest
+        virtualenv: "{{ kingdom_home }}/kingdom-bots/venv"
+      become_user: "{{ kingdom_user }}"
+      tags: [setup, update]
+
+    - name: Install Python dependencies
+      pip:
+        requirements: "{{ kingdom_home }}/kingdom-bots/requirements.txt"
+        virtualenv: "{{ kingdom_home }}/kingdom-bots/venv"
+      become_user: "{{ kingdom_user }}"
+      tags: [setup, update, deploy]
+
+    # Environment Configuration
+    - name: Create environment file
+      template:
+        src: templates/bot.env.j2
+        dest: "/etc/kingdom/{{ bot_id }}.env"
+        owner: "{{ kingdom_user }}"
+        group: "{{ kingdom_user }}"
+        mode: '0600'
+      when: bot_token is defined
+      tags: [setup, config]
+
+    - name: Check if environment file exists
+      stat:
+        path: "/etc/kingdom/{{ bot_id }}.env"
+      register: env_file
+      tags: [setup, config]
+
+    - name: Create placeholder environment file
+      copy:
+        dest: "/etc/kingdom/{{ bot_id }}.env"
+        content: |
+          # Kingdom Bot {{ bot_id | capitalize }} Environment
+          # Edit this file to add your Discord bot token
+          KINGDOM_{{ bot_id | upper }}_TOKEN=your_token_here
+          KINGDOM_{{ bot_id | upper }}_GUILD_ID=
+          KINGDOM_ADMIN_USER_1=
+          KINGDOM_ADMIN_USER_2=
+          KINGDOM_ADMIN_ROLE=
+        owner: "{{ kingdom_user }}"
+        group: "{{ kingdom_user }}"
+        mode: '0600'
+      when: not env_file.stat.exists and bot_token is not defined
+      tags: [setup, config]
+
+    # Systemd Service
+    - name: Deploy systemd service
+      template:
+        src: templates/kingdom-bot.service.j2
+        dest: "/etc/systemd/system/kingdom-{{ bot_id }}.service"
+        mode: '0644'
+      notify:
+        - Reload systemd
+        - Restart kingdom bot
+      tags: [setup, deploy]
+
+    - name: Enable kingdom bot service
+      systemd:
+        name: "kingdom-{{ bot_id }}"
+        enabled: yes
+        daemon_reload: yes
+      tags: [setup, deploy]
+
+    # Service Management
+    - name: Start kingdom bot service
+      systemd:
+        name: "kingdom-{{ bot_id }}"
+        state: started
+      when: bot_token is defined or env_file.stat.exists
+      tags: [deploy, start]
+
+  handlers:
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes
+
+    - name: Restart kingdom bot
+      systemd:
+        name: "kingdom-{{ bot_id }}"
+        state: restarted
+      when: bot_token is defined or env_file.stat.exists
+
+# Inventory file example (inventory.yml):
+# ----------------------------------------
+# all:
+#   children:
+#     kingdom_bots:
+#       hosts:
+#         alpha:
+#           ansible_host: alpha.tailnet-name.ts.net
+#           bot_id: alpha
+#           bot_token: "{{ vault_alpha_token }}"
+#         beta:
+#           ansible_host: beta.tailnet-name.ts.net
+#           bot_id: beta
+#           bot_token: "{{ vault_beta_token }}"
+#         gamma:
+#           ansible_host: gamma.tailnet-name.ts.net
+#           bot_id: gamma
+#           bot_token: "{{ vault_gamma_token }}"
+#         delta:
+#           ansible_host: delta.tailnet-name.ts.net
+#           bot_id: delta
+#           bot_token: "{{ vault_delta_token }}"
+#       vars:
+#         ansible_user: root
+#         ansible_python_interpreter: /usr/bin/python3

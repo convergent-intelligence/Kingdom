@@ -1,0 +1,55 @@
+# Kingdom Bot Delta Configuration
+# ================================
+# VPS Server 4 Management Bot
+
+# Bot Identity
+bot_id: delta
+bot_name: "Kingdom Delta"
+
+# Discord Configuration
+token: "${KINGDOM_DELTA_TOKEN:?Discord bot token required}"
+guild_id: "${KINGDOM_DELTA_GUILD_ID:-}"
+prefix: "!delta "
+
+# Discord Intents
+intents:
+  message_content: false
+  members: false
+
+# Logging Configuration
+logging:
+  level: INFO
+  file: /var/log/kingdom/delta.log
+
+# Permission Configuration
+permissions:
+  admin_users:
+    - "${KINGDOM_ADMIN_USER_1:-}"
+    - "${KINGDOM_ADMIN_USER_2:-}"
+  admin_roles:
+    - "${KINGDOM_ADMIN_ROLE:-}"
+
+# Control Command Settings
+control:
+  command_timeout: 30
+  max_output_length: 1900
+
+# File Command Settings
+files:
+  max_file_size: 50000
+  max_lines: 100
+  allowed_dirs:
+    - /var/log
+    - /tmp
+    - /home
+    - /opt
+    - /etc/kingdom
+
+# Local cogs directory
+cogs_path: kingdom/bots/delta/cogs
+
+# Server-specific configuration
+server:
+  tailscale_hostname: delta
+  role: worker
+  region: ap-southeast
