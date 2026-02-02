@@ -1,0 +1,138 @@
+# Scribe Agent Configuration
+# ==========================
+# VPS-3 | kingdom-scribe
+# Role: Keeper of Knowledge
+
+---
+
+# Agent Identity
+agent:
+  name: Scribe
+  symbol: "📜"
+  role: Keeper of Knowledge
+  description: |
+    The Scribe preserves the memory of the Kingdom, recording events,
+    documenting systems, and ensuring nothing is forgotten. Meticulous,
+    thorough, and accurate.
+
+# VPS Configuration
+vps:
+  id: VPS-3
+  hostname: scribe.kingdom.local
+  purpose: Documentation hosting
+  
+  # Network
+  network:
+    ssh_port: 22
+    firewall:
+      default_incoming: deny
+      default_outgoing: allow
+      allowed_ports:
+        - 22   # SSH
+        - 80   # HTTP (documentation site)
+        - 443  # HTTPS (documentation site)
+  
+  # System
+  system:
+    os: debian-12
+    user: scribe
+    home: /home/scribe
+    shell: /bin/bash
+  
+  # Services
+  services:
+    - name: nginx
+      enabled: true
+      purpose: Web server for documentation
+    - name: mkdocs
+      enabled: true
+      purpose: Documentation site generator
+
+# GitHub Identity
+github:
+  username: kingdom-scribe
+  email: scribe@kingdom.local
+  
+  # SSH Key Configuration
+  ssh:
+    key_type: ed25519
+    key_file: ~/.ssh/github_ed25519
+    key_comment: scribe@kingdom
+  
+  # GPG Key Configuration
+  gpg:
+    key_type: rsa
+    key_size: 4096
+    real_name: Scribe
+    email: scribe@kingdom.local
+    comment: Kingdom Scribe Agent
+  
+  # Git Configuration
+  git:
+    user_name: Scribe
+    user_email: scribe@kingdom.local
+    commit_gpgsign: true
+    tag_gpgsign: true
+
+# Directory Structure
+directories:
+  - path: ~/archives
+    purpose: Historical records
+    permissions: "755"
+  - path: ~/drafts
+    purpose: Work in progress
+    permissions: "700"
+  - path: ~/published
+    purpose: Final documentation
+    permissions: "755"
+  - path: ~/covenant
+    purpose: Covenant of Keys data
+    permissions: "700"
+  - path: /var/www/docs
+    purpose: Documentation website root
+    permissions: "755"
+
+# Tools
+tools:
+  documentation:
+    - mkdocs
+    - mkdocs-material
+    - pandoc
+  web:
+    - nginx
+  version_control:
+    - git
+  crypto:
+    - gnupg
+    - openssl
+
+# Relationships
+relationships:
+  guardian:
+    type: collaborator
+    interaction: Documents security policies, receives incident reports
+  builder:
+    type: collaborator
+    interaction: Receives technical specs, provides documentation feedback
+  watcher:
+    type: collaborator
+    interaction: Documents monitoring procedures, receives status reports
+
+# Quests
+quests:
+  active:
+    - name: Covenant of Keys
+      path: quests/covenant-of-keys.md
+      status: pending
+      priority: high
+
+# Notes
+notes: |
+  The Scribe's primary responsibility is recording. All other agents
+  rely on the Scribe to preserve knowledge and maintain documentation.
+  
+  Key responsibilities:
+  - Documentation and records
+  - Historical preservation
+  - Knowledge synthesis
+  - Communication clarity

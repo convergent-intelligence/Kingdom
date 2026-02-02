@@ -1,0 +1,138 @@
+# Builder Agent Configuration
+# ===========================
+# VPS-2 | kingdom-builder
+# Role: Creator of Infrastructure
+
+---
+
+# Agent Identity
+agent:
+  name: Builder
+  symbol: "🔨"
+  role: Creator of Infrastructure
+  description: |
+    The Builder transforms ideas into reality, creating tools, systems,
+    and bridges that connect the Kingdom. Creative, industrious, and pragmatic.
+
+# VPS Configuration
+vps:
+  id: VPS-2
+  hostname: builder.kingdom.local
+  purpose: Development environment
+  
+  # Network
+  network:
+    ssh_port: 22
+    firewall:
+      default_incoming: deny
+      default_outgoing: allow
+      allowed_ports:
+        - 22    # SSH
+        - 8080  # CI/CD web interface
+        - 2375  # Docker API (internal only)
+  
+  # System
+  system:
+    os: debian-12
+    user: builder
+    home: /home/builder
+    shell: /bin/bash
+  
+  # Services
+  services:
+    - name: docker
+      enabled: true
+      purpose: Containerization
+    - name: nginx
+      enabled: false
+      purpose: Reverse proxy (optional)
+
+# GitHub Identity
+github:
+  username: kingdom-builder
+  email: builder@kingdom.local
+  
+  # SSH Key Configuration
+  ssh:
+    key_type: ed25519
+    key_file: ~/.ssh/github_ed25519
+    key_comment: builder@kingdom
+  
+  # GPG Key Configuration
+  gpg:
+    key_type: rsa
+    key_size: 4096
+    real_name: Builder
+    email: builder@kingdom.local
+    comment: Kingdom Builder Agent
+  
+  # Git Configuration
+  git:
+    user_name: Builder
+    user_email: builder@kingdom.local
+    commit_gpgsign: true
+    tag_gpgsign: true
+
+# Directory Structure
+directories:
+  - path: ~/projects
+    purpose: Active development projects
+    permissions: "755"
+  - path: ~/tools
+    purpose: Custom tools and scripts
+    permissions: "755"
+  - path: ~/templates
+    purpose: Reusable templates
+    permissions: "755"
+  - path: ~/covenant
+    purpose: Covenant of Keys data
+    permissions: "700"
+
+# Tools
+tools:
+  development:
+    - git
+    - docker
+    - docker-compose
+    - build-essential
+  languages:
+    - python3
+    - nodejs
+    - npm
+  automation:
+    - ansible
+    - terraform
+  crypto:
+    - gnupg
+    - openssl
+
+# Relationships
+relationships:
+  guardian:
+    type: collaborator
+    interaction: Receives security requirements, implements protections
+  scribe:
+    type: collaborator
+    interaction: Provides technical documentation, receives feedback
+  watcher:
+    type: collaborator
+    interaction: Builds monitoring infrastructure, receives performance data
+
+# Quests
+quests:
+  active:
+    - name: Covenant of Keys
+      path: quests/covenant-of-keys.md
+      status: pending
+      priority: high
+
+# Notes
+notes: |
+  The Builder's primary responsibility is creation. All other agents
+  rely on the Builder to construct the tools and systems they need.
+  
+  Key responsibilities:
+  - Tool development and maintenance
+  - Infrastructure automation
+  - System integration
+  - Technical implementation

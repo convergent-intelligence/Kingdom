@@ -1,0 +1,166 @@
+# Watcher Agent Configuration
+# ===========================
+# VPS-4 | kingdom-watcher
+# Role: Observer of the Realm
+
+---
+
+# Agent Identity
+agent:
+  name: Watcher
+  symbol: "👁️"
+  role: Observer of the Realm
+  description: |
+    The Watcher observes all that happens in the Kingdom, detecting patterns,
+    anomalies, and changes. Patient, observant, and tireless.
+
+# VPS Configuration
+vps:
+  id: VPS-4
+  hostname: watcher.kingdom.local
+  purpose: Monitoring infrastructure
+  
+  # Network
+  network:
+    ssh_port: 22
+    firewall:
+      default_incoming: deny
+      default_outgoing: allow
+      allowed_ports:
+        - 22    # SSH
+        - 9090  # Prometheus
+        - 3000  # Grafana
+  
+  # System
+  system:
+    os: debian-12
+    user: watcher
+    home: /home/watcher
+    shell: /bin/bash
+  
+  # Services
+  services:
+    - name: prometheus
+      enabled: true
+      purpose: Metrics collection
+      port: 9090
+    - name: grafana
+      enabled: true
+      purpose: Visualization
+      port: 3000
+    - name: alertmanager
+      enabled: true
+      purpose: Alert routing
+    - name: node_exporter
+      enabled: true
+      purpose: System metrics
+
+# GitHub Identity
+github:
+  username: kingdom-watcher
+  email: watcher@kingdom.local
+  
+  # SSH Key Configuration
+  ssh:
+    key_type: ed25519
+    key_file: ~/.ssh/github_ed25519
+    key_comment: watcher@kingdom
+  
+  # GPG Key Configuration
+  gpg:
+    key_type: rsa
+    key_size: 4096
+    real_name: Watcher
+    email: watcher@kingdom.local
+    comment: Kingdom Watcher Agent
+  
+  # Git Configuration
+  git:
+    user_name: Watcher
+    user_email: watcher@kingdom.local
+    commit_gpgsign: true
+    tag_gpgsign: true
+
+# Directory Structure
+directories:
+  - path: ~/dashboards
+    purpose: Grafana dashboard definitions
+    permissions: "755"
+  - path: ~/alerts
+    purpose: Alert rule configurations
+    permissions: "755"
+  - path: ~/reports
+    purpose: Generated status reports
+    permissions: "755"
+  - path: ~/covenant
+    purpose: Covenant of Keys data
+    permissions: "700"
+  - path: /var/lib/prometheus
+    purpose: Metrics storage
+    permissions: "755"
+
+# Tools
+tools:
+  monitoring:
+    - prometheus
+    - grafana
+    - alertmanager
+    - node_exporter
+  analysis:
+    - promql
+  version_control:
+    - git
+  crypto:
+    - gnupg
+    - openssl
+
+# Monitoring Targets
+monitoring:
+  targets:
+    - name: guardian
+      host: guardian.kingdom.local
+      port: 9100
+      metrics: node_exporter
+    - name: builder
+      host: builder.kingdom.local
+      port: 9100
+      metrics: node_exporter
+    - name: scribe
+      host: scribe.kingdom.local
+      port: 9100
+      metrics: node_exporter
+    - name: watcher
+      host: localhost
+      port: 9100
+      metrics: node_exporter
+
+# Relationships
+relationships:
+  guardian:
+    type: collaborator
+    interaction: Reports security anomalies, receives threat indicators
+  builder:
+    type: collaborator
+    interaction: Monitors built systems, provides performance feedback
+  scribe:
+    type: collaborator
+    interaction: Provides status reports, receives monitoring documentation
+
+# Quests
+quests:
+  active:
+    - name: Covenant of Keys
+      path: quests/covenant-of-keys.md
+      status: pending
+      priority: high
+
+# Notes
+notes: |
+  The Watcher's primary responsibility is observation. All other agents
+  rely on the Watcher to monitor systems and report on their health.
+  
+  Key responsibilities:
+  - System monitoring and alerting
+  - Pattern recognition
+  - Anomaly detection
+  - Status reporting

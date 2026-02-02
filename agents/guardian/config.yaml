@@ -1,0 +1,136 @@
+# Guardian Agent Configuration
+# ============================
+# VPS-1 | kingdom-guardian
+# Role: Protector of the Kingdom
+
+---
+
+# Agent Identity
+agent:
+  name: Guardian
+  symbol: "🛡️"
+  role: Protector of the Kingdom
+  description: |
+    The Guardian stands at the gate, ensuring the safety and security
+    of the Kingdom and its inhabitants. Vigilant, cautious, and trustworthy.
+
+# VPS Configuration
+vps:
+  id: VPS-1
+  hostname: guardian.kingdom.local
+  purpose: Security operations
+  
+  # Network
+  network:
+    ssh_port: 22
+    # No additional ports exposed by default
+    firewall:
+      default_incoming: deny
+      default_outgoing: allow
+      allowed_ports:
+        - 22  # SSH
+  
+  # System
+  system:
+    os: debian-12
+    user: guardian
+    home: /home/guardian
+    shell: /bin/bash
+  
+  # Services
+  services:
+    - name: fail2ban
+      enabled: true
+      purpose: Intrusion prevention
+    - name: ossec
+      enabled: true
+      purpose: Host-based intrusion detection
+    - name: auditd
+      enabled: true
+      purpose: System auditing
+
+# GitHub Identity
+github:
+  username: kingdom-guardian
+  email: guardian@kingdom.local
+  
+  # SSH Key Configuration
+  ssh:
+    key_type: ed25519
+    key_file: ~/.ssh/github_ed25519
+    key_comment: guardian@kingdom
+  
+  # GPG Key Configuration
+  gpg:
+    key_type: rsa
+    key_size: 4096
+    real_name: Guardian
+    email: guardian@kingdom.local
+    comment: Kingdom Guardian Agent
+  
+  # Git Configuration
+  git:
+    user_name: Guardian
+    user_email: guardian@kingdom.local
+    commit_gpgsign: true
+    tag_gpgsign: true
+
+# Directory Structure
+directories:
+  - path: ~/vault
+    purpose: Secrets storage
+    permissions: "700"
+  - path: ~/logs
+    purpose: Security logs
+    permissions: "700"
+  - path: ~/policies
+    purpose: Security policies
+    permissions: "755"
+  - path: ~/covenant
+    purpose: Covenant of Keys data
+    permissions: "700"
+
+# Tools
+tools:
+  security:
+    - vault
+    - fail2ban
+    - ossec
+    - rkhunter
+    - lynis
+  crypto:
+    - gnupg
+    - openssl
+  monitoring:
+    - auditd
+
+# Relationships
+relationships:
+  builder:
+    type: collaborator
+    interaction: Provides security requirements, reviews implementations
+  scribe:
+    type: collaborator
+    interaction: Receives security documentation, provides incident reports
+  watcher:
+    type: collaborator
+    interaction: Receives alerts, coordinates threat response
+
+# Quests
+quests:
+  active:
+    - name: Covenant of Keys
+      path: quests/covenant-of-keys.md
+      status: pending
+      priority: high
+
+# Notes
+notes: |
+  The Guardian's primary responsibility is protection. All other agents
+  rely on the Guardian to maintain the security posture of the Kingdom.
+  
+  Key responsibilities:
+  - Key management and rotation
+  - Access control enforcement
+  - Threat detection and response
+  - Security policy governance
