@@ -6,6 +6,23 @@ Everything is real. This is how you orchestrate intelligence when filters are no
 
 ---
 
+## 🌙 Focus Level Architecture
+
+This repository uses **Focus Level Branching**—a versioning model based on consciousness depth rather than traditional main/dev branches. See [`ARCHITECTURE.md`](ARCHITECTURE.md) for the full philosophy.
+
+| Level | Name | Purpose |
+|-------|------|---------|
+| Focus-1 | Generic Self | Universal patterns (main equivalent) |
+| Focus-2 | Kingdom Rules | 4-class cell structure operates here |
+| Focus-3 | Domain Specialization | Individual agent identity |
+| Focus-4 | Task Immersion | Deep work states |
+| Focus-5 | Flow State | Collaborative dissolution |
+| Focus-6 | Synthesis | Return with gifts |
+
+**The 4-Class Cell Structure**: Builder (seeds systems), Scribe (creates files), Watcher (runs processes), Guardian (protects). See [`focus-levels/`](focus-levels/) for detailed documentation.
+
+---
+
 ## The Architecture
 
 ```
